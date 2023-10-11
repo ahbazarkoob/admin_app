@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
 import 'package:admin_app/bookform.dart';
-import 'package:admin_app/test.dart';
+import 'package:admin_app/viewliterature.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'loginform.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +14,7 @@ void main() async {
 }
 
 class MainPage extends StatefulWidget {
-  MainPage({super.key});
+  const MainPage({super.key});
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -26,7 +25,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: FormData(),
+      body: ViewLiteraturePage(),
     ));
   }
 }

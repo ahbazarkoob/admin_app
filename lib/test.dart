@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -12,7 +11,7 @@ class Test extends StatefulWidget {
 }
 
 class _TestState extends State<Test> {
-   File? _imageFile;
+  File? _imageFile;
 
   void _pickImage() async {
     final picker = ImagePicker();
@@ -21,33 +20,28 @@ class _TestState extends State<Test> {
     if (pickedFile != null) {
       setState(() {
         _imageFile = File(pickedFile.path);
-        final storage = FirebaseStorage.instance;
-        final storageRef = storage.ref().child('images/${_imageFile!}');
-        final uploadTask = storageRef.putFile(_imageFile!);
       });
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Image Upload'),
+      appBar: AppBar(
+        title: const Text('Image Upload'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (_imageFile != null) Image.file(_imageFile!),
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: const Text('Pick Image'),
+            ),
+          ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              if (_imageFile != null)
-                Image.file(_imageFile!),
-              ElevatedButton(
-                onPressed: _pickImage,
-                child: Text('Pick Image'),
-              ),
-            ],
-          ),
-        ),
-      );
+      ),
+    );
   }
 }

@@ -1,12 +1,10 @@
 // ignore_for_file: must_be_immutable, prefer_const_constructors, use_key_in_widget_constructors
 
 import 'package:admin_app/constants.dart';
+import 'package:admin_app/widgets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
-import 'bookform.dart';
-import 'loginform.dart';
 
 TextEditingController culturenamecontroller = TextEditingController();
 TextEditingController culturedesccontroller = TextEditingController();
@@ -33,8 +31,7 @@ class _CultureFormDataState extends State<CultureFormData> {
               style: kHeading,
             ),
             TextInput(
-                hintText: 'Culture Name',
-                controller: culturenamecontroller),
+                hintText: 'Culture Name', controller: culturenamecontroller),
             TextInput(
                 hintText: 'Culture Description',
                 controller: culturedesccontroller),

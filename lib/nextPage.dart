@@ -9,12 +9,16 @@ class NextPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: Column(
-          children: [
-            Center(child: Text('Welcome',style: kHeading,),),
-          ],
-        ))
-    );
+        child: Scaffold(
+            body: Column(
+      children: const [
+        Center(
+          child: Text(
+            'Welcome',
+            style: kHeading,
+          ),
+        ),
+      ],
+    )));
   }
 }
