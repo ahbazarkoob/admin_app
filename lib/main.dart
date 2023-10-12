@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:admin_app/bookform.dart';
+import 'package:admin_app/nextPage.dart';
 import 'package:admin_app/viewliterature.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +13,8 @@ void main() async {
   ));
 }
 
+var devH, devW, button;
+
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
 
@@ -23,6 +25,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
+    devH = MediaQuery.of(context).size.height;
+    devW = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
       body: ViewLiteraturePage(),

@@ -1,24 +1,18 @@
-// ignore_for_file: file_names, prefer_const_constructors
+// ignore_for_file: file_names, prefer_const_constructors, must_be_immutable
 
-import 'package:admin_app/constants.dart';
 import 'package:flutter/material.dart';
 
 class NextPage extends StatelessWidget {
-  const NextPage({super.key});
+  NextPage({super.key});
+  TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: Column(
-      children: const [
-        Center(
-          child: Text(
-            'Welcome',
-            style: kHeading,
-          ),
-        ),
-      ],
-    )));
+      body: TextFormField(
+        controller: controller,
+      ),
+    ));
   }
 }

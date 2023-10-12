@@ -19,9 +19,10 @@ TextEditingController langController = TextEditingController();
 TextEditingController descController = TextEditingController();
 TextEditingController urlController = TextEditingController();
 final formGlobalKey = GlobalKey<FormState>();
+ImagePicker picker = ImagePicker();
+File image = File('');
 File? imageFile;
 String imageURL = "";
-String imagePath = "";
 
 class FormData extends StatefulWidget {
   List<String> category = ['Poetry', 'Prose', 'History', 'New'];
@@ -43,12 +44,7 @@ class _FormDataState extends State<FormData> {
       Reference refDirImages = referenceRoot.child('images');
       Reference referenceImageToUpload = refDirImages.child(uniqueFileName);
       final uploadTask = await referenceImageToUpload.putFile(imageFile!);
-      print("hello");
       imageURL = await referenceImageToUpload.getDownloadURL();
-      print(imageURL);
-      setState(() {
-        URL = imageURL;
-      });
     }
   }
 
@@ -110,10 +106,6 @@ class _FormDataState extends State<FormData> {
                           onPressed: () {
                             pickimage();
                             showImage = true;
-                            // });
-                            // setState(() {
-                            //   imagePath = imageURL;
-                            // });
                           },
                           icon: Icon(Icons.camera)),
                     ],
@@ -145,13 +137,13 @@ class _FormDataState extends State<FormData> {
                   ElevatedButton(
                       onPressed: () {
                         if (formGlobalKey.currentState!.validate()) {
-                          if (URL != null) {
+                          if (imageURL != null) {
                             String bookId = DateTime.now()
                                 .microsecondsSinceEpoch
                                 .toString();
                             FirebaseFirestore.instance
                                 .collection('books')
-                                .doc()
+                                .doc(bookId)
                                 .set({
                               'BID': bookId,
                               'Category': widget.selcategory,
@@ -164,12 +156,6 @@ class _FormDataState extends State<FormData> {
                               'Description': descController.text,
                               'Link': urlController.text
                             }).whenComplete(() => {
-                                      if ('Bookimage' == null)
-                                        {
-                                          Alert(
-                                              context: context,
-                                              title: 'Image not selected')
-                                        },
                                       nameController.clear(),
                                       authorController.clear(),
                                       genreController.clear(),
@@ -194,16 +180,5 @@ class _FormDataState extends State<FormData> {
         ),
       ),
     ));
-  }
-
-  // ignore: non_constant_identifier_names
-  String URL = '';
-  ImagePicker picker = ImagePicker();
-  File image = File('');
-
-  imageUpload() {
-    // setState(() {
-    //   Image.network(URL);
-    // });
   }
 }
