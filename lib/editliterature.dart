@@ -36,17 +36,21 @@ class _EditLiteraturePageState extends State<EditLiteraturePage> {
         .doc(widget.docId.toString())
         .get()
         .then((value) => {
-              nameController.text = value['Bookname'],
-              authorController.text = value['Author'],
-              genreController.text = value['Genre'],
-              langController.text = value['Language'],
-              lengthController.text = value['Length'],
-              descController.text = value['Description'],
-              urlController.text = value['Link'],
-              bidController.text = value['BID'],
-              categoryController.text = value['Category'],
-              networkImage = value['Bookimage'],
+              setState(() {
+                nameController.text = value['Bookname'];
+                authorController.text = value['Author'];
+                genreController.text = value['Genre'];
+                langController.text = value['Language'];
+                lengthController.text = value['Length'];
+                descController.text = value['Description'];
+                urlController.text = value['Link'];
+                bidController.text = value['BID'];
+                categoryController.text = value['Category'];
+                imageController.text = value['Bookimage'];
+                networkImage = value['Bookimage'];
+              })
             });
+
     print(imageController.text);
     super.initState();
   }
@@ -101,14 +105,14 @@ class _EditLiteraturePageState extends State<EditLiteraturePage> {
                             image: NetworkImage(networkImage),
                             fit: BoxFit.fill)),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: TextFormField(
-                  //       validator: ValidationBuilder().url().build(),
-                  //       controller: urlController,
-                  //       decoration: InputDecoration(
-                  //           enabledBorder: kBorder, focusedBorder: kBorder)),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: TextFormField(
+                        validator: ValidationBuilder().url().build(),
+                        controller: urlController,
+                        decoration: InputDecoration(
+                            enabledBorder: kBorder, focusedBorder: kBorder)),
+                  ),
                   ElevatedButton(
                       onPressed: () {
                         if (formGlobalKey.currentState!.validate()) {

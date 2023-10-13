@@ -24,15 +24,15 @@ File image = File('');
 File? imageFile;
 String imageURL = "";
 
-class FormData extends StatefulWidget {
+class BookFormData extends StatefulWidget {
   List<String> category = ['Poetry', 'Prose', 'History', 'New'];
   String selcategory = 'Poetry';
-  FormData({super.key});
+  BookFormData({super.key});
   @override
-  State<FormData> createState() => _FormDataState();
+  State<BookFormData> createState() => _BookFormDataState();
 }
 
-class _FormDataState extends State<FormData> {
+class _BookFormDataState extends State<BookFormData> {
   pickimage() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();

@@ -1,46 +1,53 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
+import 'package:admin_app/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:multi_dropdown/multiselect_dropdown.dart';
 
 class DemoPage extends StatefulWidget {
-  String docId;
-  DemoPage(this.docId);
-  // const DemoPage({super.key});
+  const DemoPage({super.key});
 
   @override
   State<DemoPage> createState() => _DemoPageState();
 }
 
 class _DemoPageState extends State<DemoPage> {
-  TextEditingController demoController = TextEditingController();
-  @override
-  void initState() {
-    print(widget.docId);
-    demoController.text = widget.docId.toString();
-    FirebaseFirestore.instance
-        .collection('books')
-        .doc(widget.docId)
-        .get()
-        .then((value) => {
-              demoController.text = value['Bookname'],
-            });
-    // TODO: implement initState
-    super.initState();
-  }
+  final MultiSelectController _controller = MultiSelectController();
 
+  final List<ValueItem> _selectedOptions = [];
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: Center(
-          child: Container(
-            child: TextFormField(
-              controller: demoController,
+    return Scaffold(
+        backgroundColor: Colors.grey.shade300,
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: MultiSelectDropDown(
+              showClearIcon: true,
+              controller: _controller,
+              onOptionSelected: (options) {
+                debugPrint(options.toString());
+              },
+              searchEnabled: true,
+              options: const <ValueItem>[
+                ValueItem(label: 'Option 1', value: '1'),
+                ValueItem(label: 'Option 2', value: '2'),
+                ValueItem(label: 'Option 3', value: '3'),
+                ValueItem(label: 'Option 4', value: '4'),
+                ValueItem(label: 'Option 5', value: '5'),
+                ValueItem(label: 'Option 6', value: '6'),
+              ],
+              maxItems: 4,
+              selectionType: SelectionType.multi,
+              chipConfig: const ChipConfig(
+                  wrapType: WrapType.wrap, backgroundColor: Colors.red),
+              dropdownHeight: 300,
+              optionTextStyle: const TextStyle(fontSize: 16),
+              selectedOptionIcon: const Icon(
+                Icons.check_circle,
+                color: Colors.pink,
+              ),
+              selectedOptionTextColor: Colors.blue,
             ),
           ),
-        ),
-      ),
-    );
+        ));
   }
 }

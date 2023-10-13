@@ -41,6 +41,7 @@ dependencies:
   rflutter_alert: ^2.0.7
   image_picker: ^1.0.4
   form_validator: ^2.1.1
+  multi_dropdown: ^2.1.0
 
 dev_dependencies:
   flutter_test:

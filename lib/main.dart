@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors, avoid_print
 
-import 'package:admin_app/nextPage.dart';
+import 'package:admin_app/bookform.dart';
+import 'package:admin_app/demopage.dart';
+import 'package:admin_app/recipieform.dart';
 import 'package:admin_app/viewliterature.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +31,22 @@ class _MainPageState extends State<MainPage> {
     devW = MediaQuery.of(context).size.width;
     return SafeArea(
         child: Scaffold(
-      body: ViewLiteraturePage(),
+      body: Column(
+        children: [
+          SelectionButton(ViewLiteraturePage(), 'View Literature Page'),
+          SelectionButton(BookFormData(), 'Add Book'),
+          SelectionButton(RecipeFormData(), 'Add Recipie'),
+          SelectionButton(DemoPage(), 'Demo')
+        ],
+      ),
     ));
+  }
+
+  Widget SelectionButton(var nextPage, String text) {
+    return OutlinedButton(
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (_) => nextPage));
+        },
+        child: Text(text));
   }
 }

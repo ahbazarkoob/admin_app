@@ -3,7 +3,6 @@ import 'package:admin_app/demopage.dart';
 import 'package:admin_app/editliterature.dart';
 import 'package:admin_app/nextPage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
 
@@ -18,10 +17,7 @@ class _ViewLiteraturePageState extends State<ViewLiteraturePage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('books')
-            .where('Category', isEqualTo: 'Prose')
-            .snapshots(),
+        stream: FirebaseFirestore.instance.collection('books').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
