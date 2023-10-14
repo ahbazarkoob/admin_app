@@ -2,8 +2,10 @@
 
 import 'package:admin_app/bookform.dart';
 import 'package:admin_app/demopage.dart';
+import 'package:admin_app/mainPageform.dart';
 import 'package:admin_app/recipieform.dart';
 import 'package:admin_app/viewliterature.dart';
+import 'package:admin_app/viewmain.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -33,9 +35,11 @@ class _MainPageState extends State<MainPage> {
         child: Scaffold(
       body: Column(
         children: [
+          SelectionButton(MainCategoryPage(), 'View Main Page'),
           SelectionButton(ViewLiteraturePage(), 'View Literature Page'),
           SelectionButton(BookFormData(), 'Add Book'),
           SelectionButton(RecipeFormData(), 'Add Recipie'),
+          SelectionButton(MainFormData(), 'Add Category'),
           SelectionButton(DemoPage(), 'Demo')
         ],
       ),
