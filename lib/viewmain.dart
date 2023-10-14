@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:admin_app/demopage.dart';
+import 'package:admin_app/editmainform.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'main.dart';
@@ -30,9 +31,11 @@ class _MainCategoryPageState extends State<MainCategoryPage> {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
               return MainTile(
-                  category: data['CategoryName'].toString(),
-                  description: data['CategoryDescription'],
-                  imagePath: data['CategoryImage']);
+                category: data['CategoryName'].toString(),
+                description: data['CategoryDescription'],
+                imagePath: data['CategoryImage'],
+                id: data['CID'],
+              );
             }).toList(),
           );
         });
@@ -43,11 +46,13 @@ class MainTile extends StatelessWidget {
   final String category;
   final String description;
   final String imagePath;
+  String id = '';
 
   MainTile(
       {required this.category,
       required this.description,
-      required this.imagePath});
+      required this.imagePath,
+      required this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -65,8 +70,8 @@ class MainTile extends StatelessWidget {
               Text('Category'),
               IconButton(
                   onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (_) => DemoPage()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => EditMainPage(id)));
                   },
                   icon: Icon(Icons.edit))
             ],
