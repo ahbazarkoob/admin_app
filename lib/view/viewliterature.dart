@@ -1,10 +1,7 @@
-import 'dart:async';
-import 'package:admin_app/demopage.dart';
-import 'package:admin_app/editliterature.dart';
-import 'package:admin_app/nextPage.dart';
+import 'package:admin_app/edit/editliterature.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../main.dart';
 
 class ViewLiteraturePage extends StatefulWidget {
   const ViewLiteraturePage({super.key});
@@ -20,11 +17,11 @@ class _ViewLiteraturePageState extends State<ViewLiteraturePage> {
         stream: FirebaseFirestore.instance.collection('books').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return Text('Something went wrong');
+            return const Text('Something went wrong');
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
+            return const Text("Loading");
           }
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
@@ -60,8 +57,9 @@ class MyListTile extends StatelessWidget {
   final String category;
   final String id;
 
-  MyListTile(
-      {required this.bookName,
+  const MyListTile(
+      {super.key,
+      required this.bookName,
       required this.author,
       required this.genre,
       required this.category,
@@ -86,7 +84,7 @@ class MyListTile extends StatelessWidget {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('LITERATURE'),
+              const Text('LITERATURE'),
               IconButton(
                   onPressed: () {
                     Navigator.push(
@@ -94,7 +92,7 @@ class MyListTile extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (_) => EditLiteraturePage(id)));
                   },
-                  icon: Icon(Icons.edit))
+                  icon: const Icon(Icons.edit))
             ],
           ),
           subtitle: Column(
@@ -110,9 +108,11 @@ class MyListTile extends StatelessWidget {
               Container(
                 height: devW * 0.4,
                 width: devW * 0.3,
-                margin: EdgeInsets.all(10),
+                margin: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(blurRadius: 5, offset: Offset(5, 5))],
+                    boxShadow: const [
+                      BoxShadow(blurRadius: 5, offset: Offset(5, 5))
+                    ],
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: Colors.black, width: 1),
                     image: DecorationImage(

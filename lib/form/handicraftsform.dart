@@ -1,39 +1,33 @@
-// ignore_for_file: must_be_immutable, prefer_const_constructors, use_key_in_widget_constructors, unused_element
+// ignore_for_file: must_be_immutable, prefer_const_constructors, use_key_in_widget_constructors, unused_element, unused_local_variable, unnecessary_set_literal
 
 import 'dart:io';
-import 'package:admin_app/constants.dart';
-import 'package:admin_app/widgets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import '../constants.dart';
+import 'bookform.dart';
 
-bool showImage = false;
-TextEditingController nameController = TextEditingController();
-TextEditingController authorController = TextEditingController();
-TextEditingController genreController = TextEditingController();
-TextEditingController lengthController = TextEditingController();
-TextEditingController langController = TextEditingController();
-TextEditingController descController = TextEditingController();
-TextEditingController urlController = TextEditingController();
-final formGlobalKey = GlobalKey<FormState>();
-ImagePicker picker = ImagePicker();
-File image = File('');
-File? imageFile;
-String imageURL = "";
-
-class BookFormData extends StatefulWidget {
-  List<String> category = ['Poetry', 'Prose', 'History', 'New'];
-  String selcategory = 'Poetry';
-  BookFormData({super.key});
+class HandicraftFormData extends StatefulWidget {
+  HandicraftFormData({super.key});
   @override
-  State<BookFormData> createState() => _BookFormDataState();
+  State<HandicraftFormData> createState() => _HandicraftFormDataState();
 }
 
-class _BookFormDataState extends State<BookFormData> {
+class _HandicraftFormDataState extends State<HandicraftFormData> {
+  List<String> category = [
+    'Paper-Mache',
+    'Carpets, Rugs amd Mats',
+    'Embroidery Work',
+    'Copper Work',
+    'Wood Carving'
+  ];
+  String selcategory = 'Paper-Mache';
+  final formGlobalKey = GlobalKey<FormState>();
   pickimage() async {
+    ImagePicker picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
     String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
     if (pickedFile != null) {
@@ -63,7 +57,7 @@ class _BookFormDataState extends State<BookFormData> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    'Add New Book',
+                    'Add New Craft',
                     style: kHeading,
                   ),
                   Row(
@@ -75,7 +69,7 @@ class _BookFormDataState extends State<BookFormData> {
                       ),
                       DropdownButton(
                         focusColor: Colors.blue,
-                        items: widget.category.map((String category) {
+                        items: category.map((String category) {
                           return DropdownMenuItem(
                             value: category,
                             child: Text(
@@ -84,17 +78,15 @@ class _BookFormDataState extends State<BookFormData> {
                             ),
                           );
                         }).toList(),
-                        value: widget.selcategory,
+                        value: selcategory,
                         onChanged: (String? newvalue) {
                           setState(() {
-                            widget.selcategory = newvalue!;
+                            selcategory = newvalue!;
                           });
                         },
                       ),
                     ],
                   ),
-                  TextInput(hintText: 'Title', controller: nameController),
-                  TextInput(hintText: 'Author', controller: authorController),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -112,15 +104,11 @@ class _BookFormDataState extends State<BookFormData> {
                   ),
                   !showImage
                       ? Text('Image not selected')
-                      : Container(
+                      : SizedBox(
                           height: 100,
                           width: 200,
                           child: Image.file(imageFile!),
                         ),
-                  TextInput(hintText: 'Genre', controller: genreController),
-                  TextInput(hintText: 'Length', controller: lengthController),
-                  TextInput(hintText: 'Lang', controller: langController),
-                  TextInput(hintText: 'Desc', controller: descController),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
@@ -128,48 +116,37 @@ class _BookFormDataState extends State<BookFormData> {
                         controller: urlController,
                         decoration: InputDecoration(
                             hintText: 'Enter book url',
-                            errorText:
-                                validate ? 'Value Can\'t Be Empty' : null,
                             hintStyle: TextStyle(fontSize: 20),
                             enabledBorder: kBorder,
                             focusedBorder: kBorder)),
                   ),
                   ElevatedButton(
                       onPressed: () {
-                        if (formGlobalKey.currentState!.validate()) {
-                          if (imageURL != null) {
-                            String bookId = DateTime.now()
-                                .microsecondsSinceEpoch
-                                .toString();
-                            FirebaseFirestore.instance
-                                .collection('books')
-                                .doc(bookId)
-                                .set({
-                              'BID': bookId,
-                              'Category': widget.selcategory,
-                              'Bookname': nameController.text,
-                              'Bookimage': imageURL,
-                              'Author': authorController.text,
-                              'Genre': genreController.text,
-                              'Length': lengthController.text,
-                              'Language': langController.text,
-                              'Description': descController.text,
-                              'Link': urlController.text
-                            }).whenComplete(() => {
-                                      nameController.clear(),
-                                      authorController.clear(),
-                                      genreController.clear(),
-                                      lengthController.clear(),
-                                      langController.clear(),
-                                      descController.clear(),
-                                      urlController.clear(),
-                                      showImage = false,
-                                      Alert(
-                                              context: context,
-                                              title: 'Book Added Successfully')
-                                          .show()
-                                    });
-                          }
+                        if (imageURL == null) {
+                          Alert(context: context, title: "Plese upload image");
+                        } else if (formGlobalKey.currentState!.validate()) {
+                          String hId =
+                              DateTime.now().microsecondsSinceEpoch.toString();
+                          FirebaseFirestore.instance
+                              .collection('handicraft')
+                              .doc(hId)
+                              .set({
+                            'HID': hId,
+                            'CraftImage': imageURL,
+                            'CraftURL': urlController.text,
+                            'Category': selcategory,
+                          }).whenComplete(() => {
+                                    urlController.clear(),
+                                    setState(() {
+                                      showImage = false;
+                                    }),
+                                    selcategory = 'Paper-Mache',
+                                    Alert(
+                                            context: context,
+                                            title:
+                                                'Handicraft Added Successfully')
+                                        .show()
+                                  });
                         }
                       },
                       child: Text('Submit'))

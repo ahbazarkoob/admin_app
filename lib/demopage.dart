@@ -1,4 +1,3 @@
-import 'package:admin_app/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:multi_dropdown/multiselect_dropdown.dart';
 
@@ -12,7 +11,6 @@ class DemoPage extends StatefulWidget {
 class _DemoPageState extends State<DemoPage> {
   final MultiSelectController _controller = MultiSelectController();
 
-  final List<ValueItem> _selectedOptions = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(

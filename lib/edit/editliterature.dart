@@ -1,8 +1,6 @@
-// ignore_for_file: prefer_const_constructors
-import 'package:admin_app/bookform.dart';
+// ignore_for_file: prefer_const_constructors, must_be_immutable
 import 'package:admin_app/constants.dart';
 import 'package:admin_app/main.dart';
-import 'package:admin_app/widgets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:form_validator/form_validator.dart';
@@ -10,7 +8,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 
 class EditLiteraturePage extends StatefulWidget {
   String docId;
-  EditLiteraturePage(this.docId);
+  EditLiteraturePage(this.docId, {super.key});
 
   @override
   State<EditLiteraturePage> createState() => _EditLiteraturePageState();
@@ -51,7 +49,6 @@ class _EditLiteraturePageState extends State<EditLiteraturePage> {
               })
             });
 
-    print(imageController.text);
     super.initState();
   }
 
@@ -96,7 +93,7 @@ class _EditLiteraturePageState extends State<EditLiteraturePage> {
                     width: devW * 0.3,
                     margin: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(blurRadius: 5, offset: Offset(5, 5))
                         ],
                         borderRadius: BorderRadius.circular(5),
@@ -147,7 +144,7 @@ class _EditLiteraturePageState extends State<EditLiteraturePage> {
 
 class EditInput extends StatefulWidget {
   TextEditingController controller = TextEditingController();
-  EditInput({required this.controller});
+  EditInput({super.key, required this.controller});
 
   @override
   State<EditInput> createState() => _EditInputState();

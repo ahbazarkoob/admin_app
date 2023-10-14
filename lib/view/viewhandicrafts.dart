@@ -1,23 +1,23 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, must_be_immutable, use_key_in_widget_constructors
 
 import 'package:admin_app/demopage.dart';
-import 'package:admin_app/editmainform.dart';
+import 'package:admin_app/edit/edithandicraft.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import '../main.dart';
 
-class MainCategoryPage extends StatefulWidget {
-  const MainCategoryPage({super.key});
+class ViewHandicraftPage extends StatefulWidget {
+  const ViewHandicraftPage({super.key});
 
   @override
-  State<MainCategoryPage> createState() => _MainCategoryPageState();
+  State<ViewHandicraftPage> createState() => _ViewHandicraftPageState();
 }
 
-class _MainCategoryPageState extends State<MainCategoryPage> {
+class _ViewHandicraftPageState extends State<ViewHandicraftPage> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('main').snapshots(),
+        stream: FirebaseFirestore.instance.collection('handicraft').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
@@ -30,11 +30,11 @@ class _MainCategoryPageState extends State<MainCategoryPage> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-              return MainTile(
-                category: data['CategoryName'].toString(),
-                description: data['CategoryDescription'],
-                imagePath: data['CategoryImage'],
-                id: data['CID'],
+              return Handicraft(
+                id: data['HID'].toString(),
+                category: data['Category'].toString(),
+                url: data['CraftURL'].toString(),
+                imagePath: data['CraftImage'].toString(),
               );
             }).toList(),
           );
@@ -42,15 +42,15 @@ class _MainCategoryPageState extends State<MainCategoryPage> {
   }
 }
 
-class MainTile extends StatelessWidget {
+class Handicraft extends StatelessWidget {
   final String category;
-  final String description;
+  final String url;
   final String imagePath;
   String id = '';
 
-  MainTile(
+  Handicraft(
       {required this.category,
-      required this.description,
+      required this.url,
       required this.imagePath,
       required this.id});
 
@@ -67,11 +67,13 @@ class MainTile extends StatelessWidget {
         child: ListTile(
           title: Row(
             children: [
-              Text('Category'),
+              Text('Handicraft'),
               IconButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => EditMainPage(id)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => EditHanducraftPage(id)));
                   },
                   icon: Icon(Icons.edit))
             ],
@@ -79,12 +81,15 @@ class MainTile extends StatelessWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Text("HID:$id"),
               Container(
                 height: devW * 0.4,
                 width: devW * 0.3,
                 margin: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    boxShadow: [BoxShadow(blurRadius: 5, offset: Offset(5, 5))],
+                    boxShadow: const [
+                      BoxShadow(blurRadius: 5, offset: Offset(5, 5))
+                    ],
                     borderRadius: BorderRadius.circular(5),
                     border: Border.all(color: Colors.black, width: 1),
                     image: DecorationImage(
@@ -92,7 +97,7 @@ class MainTile extends StatelessWidget {
               ),
               Text("CategoryName: $category"),
               Text(
-                "Description: $description",
+                "CraftURL: $url",
                 textAlign: TextAlign.justify,
               ),
             ],

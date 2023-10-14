@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, use_key_in_widget_constructors, prefer_const_constructors
+// ignore_for_file: must_be_immutable, use_key_in_widget_constructors, prefer_const_constructors, body_might_complete_normally_nullable
 
 import 'package:admin_app/constants.dart';
 import 'package:flutter/material.dart';

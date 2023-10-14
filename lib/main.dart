@@ -1,11 +1,13 @@
-// ignore_for_file: prefer_const_constructors, avoid_print
+// ignore_for_file: prefer_const_constructors, avoid_print, prefer_typing_uninitialized_variables, non_constant_identifier_names
 
-import 'package:admin_app/bookform.dart';
+import 'package:admin_app/form/bookform.dart';
 import 'package:admin_app/demopage.dart';
-import 'package:admin_app/mainPageform.dart';
-import 'package:admin_app/recipieform.dart';
-import 'package:admin_app/viewliterature.dart';
-import 'package:admin_app/viewmain.dart';
+import 'package:admin_app/form/handicraftsform.dart';
+import 'package:admin_app/form/mainPageform.dart';
+import 'package:admin_app/form/recipieform.dart';
+import 'package:admin_app/view/viewhandicrafts.dart';
+import 'package:admin_app/view/viewliterature.dart';
+import 'package:admin_app/view/viewmain.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -37,8 +39,10 @@ class _MainPageState extends State<MainPage> {
         children: [
           SelectionButton(MainCategoryPage(), 'View Main Page'),
           SelectionButton(ViewLiteraturePage(), 'View Literature Page'),
+          SelectionButton(ViewHandicraftPage(), 'View Handicraft Page'),
           SelectionButton(BookFormData(), 'Add Book'),
           SelectionButton(RecipeFormData(), 'Add Recipie'),
+          SelectionButton(HandicraftFormData(), 'Add Craft'),
           SelectionButton(MainFormData(), 'Add Category'),
           SelectionButton(DemoPage(), 'Demo')
         ],

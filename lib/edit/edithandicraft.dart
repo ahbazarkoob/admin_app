@@ -1,40 +1,38 @@
-// ignore_for_file: prefer_const_constructors
-import 'package:admin_app/bookform.dart';
+// ignore_for_file: prefer_const_constructors, must_be_immutable
 import 'package:admin_app/constants.dart';
-import 'package:admin_app/editliterature.dart';
+import 'package:admin_app/edit/editliterature.dart';
+import 'package:admin_app/form/bookform.dart';
 import 'package:admin_app/main.dart';
-import 'package:admin_app/widgets/textfield.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:form_validator/form_validator.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class EditMainPage extends StatefulWidget {
+class EditHanducraftPage extends StatefulWidget {
   String docId;
-  EditMainPage(this.docId);
+  EditHanducraftPage(this.docId, {super.key});
 
   @override
-  State<EditMainPage> createState() => _EditMainPageState();
+  State<EditHanducraftPage> createState() => _EditHanducraftPageState();
 }
 
-class _EditMainPageState extends State<EditMainPage> {
-  TextEditingController categorydesccontroller = TextEditingController();
+class _EditHanducraftPageState extends State<EditHanducraftPage> {
+  TextEditingController crafturlController = TextEditingController();
   TextEditingController categoryController = TextEditingController();
-  TextEditingController cidController = TextEditingController();
+  TextEditingController hidController = TextEditingController();
   String networkImage = '';
   final formGlobalKey = GlobalKey<FormState>();
   @override
   void initState() {
     FirebaseFirestore.instance
-        .collection('main')
+        .collection('handicraft')
         .doc(widget.docId.toString())
         .get()
         .then((value) => {
               setState(() {
-                categorydesccontroller.text = value['CategoryDescription'];
-                categoryController.text = value['CategoryName'];
-                cidController.text = value['CID'];
-                networkImage = value['CategoryImage'];
+                crafturlController.text = value['CraftURL'];
+                categoryController.text = value['Category'];
+                hidController.text = value['HID'];
+                networkImage = value['CraftImage'];
               })
             });
 
@@ -61,7 +59,7 @@ class _EditMainPageState extends State<EditMainPage> {
                       style: kHeading,
                     ),
                   ),
-                  EditInput(controller: cidController),
+                  EditInput(controller: hidController),
                   Container(
                     height: devW * 0.4,
                     width: devW * 0.3,
@@ -76,22 +74,29 @@ class _EditMainPageState extends State<EditMainPage> {
                             image: NetworkImage(networkImage),
                             fit: BoxFit.fill)),
                   ),
-                  EditInput(controller: categorydesccontroller),
+                  EditInput(controller: crafturlController),
                   ElevatedButton(
                       onPressed: () {
                         if (formGlobalKey.currentState!.validate()) {
                           FirebaseFirestore.instance
-                              .collection('main')
+                              .collection('handicraft')
                               .doc(widget.docId)
                               .update({
-                            'CID': cidController.text,
-                            'CategoryName': categoryController.text,
-                            'CategoryImage': networkImage,
-                            'CategoryDescription': categorydesccontroller.text,
-                          }).whenComplete(() => Alert(
-                                      context: context,
-                                      title: 'Category Updated Successfully')
-                                  .show());
+                            'HID': hidController.text,
+                            'Category': categoryController.text,
+                            'CraftImage': networkImage,
+                            'CraftURL': crafturlController.text,
+                          }).whenComplete(() {
+                            categoryController.clear();
+                            crafturlController.clear();
+                            setState(() {
+                              showImage = false;
+                            });
+                            Alert(
+                                    context: context,
+                                    title: 'Craft Updated Successfully')
+                                .show();
+                          });
                         }
                       },
                       child: Text('Submit'))
