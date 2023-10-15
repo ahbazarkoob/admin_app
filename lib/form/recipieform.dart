@@ -69,6 +69,7 @@ class _RecipeFormDataState extends State<RecipeFormData> {
       Reference referenceRoot = FirebaseStorage.instance.ref();
       Reference refDirImages = referenceRoot.child('images');
       Reference referenceImageToUpload = refDirImages.child(uniqueFileName);
+      final uploadTask = await referenceImageToUpload.putFile(imageFile!);
       recipeimageURL = await referenceImageToUpload.getDownloadURL();
     }
   }

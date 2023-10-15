@@ -1,4 +1,4 @@
-// ignore_for_file: must_be_immutable, prefer_const_constructors, use_key_in_widget_constructors, unused_element, unused_local_variable, unnecessary_set_literal
+// ignore_for_file: must_be_immutable, prefer_const_constructors, use_key_in_widget_constructors, unused_element, unused_local_variable, unnecessary_set_literal, unnecessary_null_comparison
 
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,7 +11,7 @@ import '../constants.dart';
 import 'bookform.dart';
 
 class HandicraftFormData extends StatefulWidget {
-  HandicraftFormData({super.key});
+  const HandicraftFormData({super.key});
   @override
   State<HandicraftFormData> createState() => _HandicraftFormDataState();
 }

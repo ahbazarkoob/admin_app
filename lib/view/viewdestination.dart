@@ -1,22 +1,23 @@
 // ignore_for_file: prefer_const_constructors, must_be_immutable, use_key_in_widget_constructors
 
-import 'package:admin_app/edit/edithandicraft.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import '../edit/editdestination.dart';
 import '../main.dart';
 
-class ViewHandicraftPage extends StatefulWidget {
-  const ViewHandicraftPage({super.key});
+class ViewDestination extends StatefulWidget {
+  const ViewDestination({super.key});
 
   @override
-  State<ViewHandicraftPage> createState() => _ViewHandicraftPageState();
+  State<ViewDestination> createState() => _ViewDestinationState();
 }
 
-class _ViewHandicraftPageState extends State<ViewHandicraftPage> {
+class _ViewDestinationState extends State<ViewDestination> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('handicraft').snapshots(),
+        stream:
+            FirebaseFirestore.instance.collection('destination').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
@@ -29,11 +30,12 @@ class _ViewHandicraftPageState extends State<ViewHandicraftPage> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-              return Handicraft(
-                id: data['HID'].toString(),
-                category: data['Category'].toString(),
-                url: data['CraftURL'].toString(),
-                imagePath: data['CraftImage'].toString(),
+              return MainTile(
+                name: data['DestName'],
+                category: data['DestCategory'].toString(),
+                description: data['DestDescription'],
+                imagePath: data['DestImage'],
+                id: data['DestId'],
               );
             }).toList(),
           );
@@ -41,15 +43,17 @@ class _ViewHandicraftPageState extends State<ViewHandicraftPage> {
   }
 }
 
-class Handicraft extends StatelessWidget {
+class MainTile extends StatelessWidget {
+  final String name;
   final String category;
-  final String url;
+  final String description;
   final String imagePath;
   String id = '';
 
-  Handicraft(
-      {required this.category,
-      required this.url,
+  MainTile(
+      {required this.name,
+      required this.category,
+      required this.description,
       required this.imagePath,
       required this.id});
 
@@ -65,14 +69,15 @@ class Handicraft extends StatelessWidget {
         elevation: 4,
         child: ListTile(
           title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Handicraft'),
+              Text('Destination'),
               IconButton(
                   onPressed: () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => EditHanducraftPage(id)));
+                            builder: (_) => EditDestinationPage(id)));
                   },
                   icon: Icon(Icons.edit))
             ],
@@ -80,7 +85,9 @@ class Handicraft extends StatelessWidget {
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("HID:$id"),
+              Text("Did:$id"),
+              Text("Category: $category"),
+              Text("Name: $name"),
               Container(
                 height: devW * 0.4,
                 width: devW * 0.3,
@@ -94,9 +101,8 @@ class Handicraft extends StatelessWidget {
                     image: DecorationImage(
                         image: NetworkImage(imagePath), fit: BoxFit.fill)),
               ),
-              Text("CategoryName: $category"),
               Text(
-                "CraftURL: $url",
+                "Description: $description",
                 textAlign: TextAlign.justify,
               ),
             ],
