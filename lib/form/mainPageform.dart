@@ -53,100 +53,119 @@ class _MainFormDataState extends State<MainFormData> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Form(
-            key: formGlobalKey,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Add Details to Main Page',
-                      style: kHeading,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(28.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          appBar: AppBar(
+        title: Text("Add Details to Main Page"),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Form(
+              key: formGlobalKey,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Add Details to Main Page',
+                        style: kHeading,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(28.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Select Category'),
+                            DropdownButton(
+                              focusColor: Colors.blue,
+                              items: category.map((String category) {
+                                return DropdownMenuItem(
+                                  value: category,
+                                  child: Text(
+                                    category,
+                                    style: kNormalTextBold,
+                                  ),
+                                );
+                              }).toList(),
+                              value: selcategory,
+                              onChanged: (String? newvalue) {
+                                setState(() {
+                                  selcategory = newvalue!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('Select Category'),
-                          DropdownButton(
-                            focusColor: Colors.blue,
-                            items: category.map((String category) {
-                              return DropdownMenuItem(
-                                value: category,
-                                child: Text(
-                                  category,
-                                  style: kNormalTextBold,
-                                ),
-                              );
-                            }).toList(),
-                            value: selcategory,
-                            onChanged: (String? newvalue) {
-                              setState(() {
-                                selcategory = newvalue!;
-                              });
-                            },
+                          Text(
+                            'Upload Image',
+                            style: kSubHeading,
                           ),
+                          IconButton(
+                              onPressed: () {
+                                pickimage();
+                                showImage = true;
+                              },
+                              icon: Icon(Icons.camera)),
                         ],
                       ),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          'Upload Image',
-                          style: kSubHeading,
-                        ),
-                        IconButton(
-                            onPressed: () {
-                              pickimage();
-                              showImage = true;
-                            },
-                            icon: Icon(Icons.camera)),
-                      ],
-                    ),
-                    !showImage
-                        ? Text('Image not selected')
-                        : Container(
-                            height: 100,
-                            width: 200,
-                            child: Image.file(imageFile!),
-                          ),
-                    TextInput(
-                        hintText: 'Category Description',
-                        controller: categorydesccontroller),
-                    ElevatedButton(
-                        onPressed: () {
-                          if (formGlobalKey.currentState!.validate()) {
-                            String Categoryid = DateTime.now()
-                                .microsecondsSinceEpoch
-                                .toString();
-                            FirebaseFirestore.instance
-                                .collection('main')
-                                .doc(Categoryid)
-                                .set({
-                              'CID': Categoryid,
-                              'CategoryName': selcategory,
-                              'CategoryImage': mainimageURL,
-                              'CategoryDescription':
-                                  categorydesccontroller.text,
-                            }).whenComplete(() => {
-                                      categorydesccontroller.clear(),
-                                      Alert(
-                                              context: context,
-                                              title:
-                                                  'Category Added Successfully')
-                                          .show()
-                                    });
-                          }
-                        },
-                        child: Text('Submit'))
-                  ],
+                      !showImage
+                          ? Text('Image not selected')
+                          : Container(
+                              height: 100,
+                              width: 200,
+                              child: Image.file(imageFile!),
+                            ),
+                      TextInput(
+                          hintText: 'Category Description',
+                          controller: categorydesccontroller),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (formGlobalKey.currentState!.validate()) {
+                              String Categoryid = DateTime.now()
+                                  .microsecondsSinceEpoch
+                                  .toString();
+                              FirebaseFirestore.instance
+                                  .collection('main')
+                                  .doc(Categoryid)
+                                  .set({
+                                'CID': Categoryid,
+                                'CategoryName': selcategory,
+                                'CategoryImage': mainimageURL,
+                                'CategoryDescription':
+                                    categorydesccontroller.text,
+                              }).whenComplete(() => {
+                                        categorydesccontroller.clear(),
+                                        setState(() {
+                                          showImage = false;
+                                        }),
+                                        Alert(
+                                                context: context,
+                                                title:
+                                                    'Category Added Successfully')
+                                            .show()
+                                      });
+                            }
+                          },
+                          child: Text('Submit'))
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-import 'editliterature.dart';
+import 'editcuisine.dart';
 
 class EditCulturePage extends StatefulWidget {
   String docId;
@@ -43,59 +43,78 @@ class _EditCulturePageState extends State<EditCulturePage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: SingleChildScrollView(
-      child: Center(
-        child: Form(
-            key: formGlobalKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Edit Culture',
-                      style: kHeading,
-                    ),
-                  ),
-                  EditInput(controller: namecontroller),
-                  Container(
-                    height: devW * 0.4,
-                    width: devW * 0.3,
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(blurRadius: 5, offset: Offset(5, 5))
-                        ],
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.black, width: 1),
-                        image: DecorationImage(
-                            image: NetworkImage(networkImage),
-                            fit: BoxFit.fill)),
-                  ),
-                  EditInput(controller: descController),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (formGlobalKey.currentState!.validate()) {
-                          FirebaseFirestore.instance
-                              .collection('culture')
-                              .doc(widget.docId)
-                              .update({
-                            'CultureName': namecontroller.text,
-                            'CultureImage': imageController.text,
-                            'CultureDescription': descController.text,
-                          }).whenComplete(() => Alert(
-                                      context: context,
-                                      title: 'Destination Updated Successfully')
-                                  .show());
-                        }
-                      },
-                      child: Text('Submit'))
-                ],
+            appBar: AppBar(
+              title: Text("Edit Culture"),
+              backgroundColor: Theme.of(context).primaryColor,
+            ),
+            body: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Colors.white,
+                    Theme.of(context).scaffoldBackgroundColor,
+                  ],
+                ),
               ),
-            )),
-      ),
-    )));
+              child: SingleChildScrollView(
+                child: Center(
+                  child: Form(
+                      key: formGlobalKey,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                'Edit Culture',
+                                style: kHeading,
+                              ),
+                            ),
+                            EditInput(controller: namecontroller),
+                            Container(
+                              height: devW * 0.4,
+                              width: devW * 0.3,
+                              margin: EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                  boxShadow: const [
+                                    BoxShadow(
+                                        blurRadius: 5, offset: Offset(5, 5))
+                                  ],
+                                  borderRadius: BorderRadius.circular(5),
+                                  border:
+                                      Border.all(color: Colors.black, width: 1),
+                                  image: DecorationImage(
+                                      image: NetworkImage(networkImage),
+                                      fit: BoxFit.fill)),
+                            ),
+                            EditInput(controller: descController),
+                            ElevatedButton(
+                                onPressed: () {
+                                  if (formGlobalKey.currentState!.validate()) {
+                                    FirebaseFirestore.instance
+                                        .collection('culture')
+                                        .doc(widget.docId)
+                                        .update({
+                                      'CultureName': namecontroller.text,
+                                      'CultureImage': imageController.text,
+                                      'CultureDescription': descController.text,
+                                    }).whenComplete(() => Alert(
+                                                context: context,
+                                                title:
+                                                    'Destination Updated Successfully')
+                                            .show());
+                                  }
+                                },
+                                child: Text('Submit'))
+                          ],
+                        ),
+                      )),
+                ),
+              ),
+            )));
   }
 }

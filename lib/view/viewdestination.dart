@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, must_be_immutable, use_key_in_widget_constructors
+// ignore_for_file: prefer_const_constructors, must_be_immutable, use_key_in_widget_constructors, use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -15,31 +15,50 @@ class ViewDestination extends StatefulWidget {
 class _ViewDestinationState extends State<ViewDestination> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream:
-            FirebaseFirestore.instance.collection('destination').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
-          }
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return MainTile(
-                name: data['DestName'],
-                category: data['DestCategory'].toString(),
-                description: data['DestDescription'],
-                imagePath: data['DestImage'],
-                id: data['DestId'],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Destination"),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+        child: StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection('destination').snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+      
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
+              return ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  return MainTile(
+                    name: data['DestName'],
+                    category: data['DestCategory'].toString(),
+                    description: data['DestDescription'],
+                    imagePath: data['DestImage'],
+                    id: data['DestId'],
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        });
+            }),
+      ),
+    );
   }
 }
 
@@ -79,7 +98,13 @@ class MainTile extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (_) => EditDestinationPage(id)));
                   },
-                  icon: Icon(Icons.edit))
+                  icon: Icon(Icons.edit)),
+              IconButton(
+                onPressed: () {
+                  deleteBook(context);
+                },
+                icon: Icon(Icons.delete),
+              ),
             ],
           ),
           subtitle: Column(
@@ -110,5 +135,9 @@ class MainTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void deleteBook(BuildContext context) async {
+    await FirebaseFirestore.instance.collection('destination').doc(id).delete();
   }
 }

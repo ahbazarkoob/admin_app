@@ -15,29 +15,47 @@ class ViewHandicraftPage extends StatefulWidget {
 class _ViewHandicraftPageState extends State<ViewHandicraftPage> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('handicraft').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
-          }
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return Handicraft(
-                id: data['HID'].toString(),
-                category: data['Category'].toString(),
-                url: data['CraftURL'].toString(),
-                imagePath: data['CraftImage'].toString(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Cuisine"), 
+      backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                Theme.of(context).scaffoldBackgroundColor,
+              ],
+            ),
+          ),
+        child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('handicraft').snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+      
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
+              return ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  return Handicraft(
+                    id: data['HID'].toString(),
+                    category: data['Category'].toString(),
+                    url: data['CraftURL'].toString(),
+                    imagePath: data['CraftImage'].toString(),
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        });
+            }),
+      ),
+    );
   }
 }
 

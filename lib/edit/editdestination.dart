@@ -43,59 +43,75 @@ class _EditDestinationPageState extends State<EditDestinationPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: SingleChildScrollView(
-      child: Center(
-        child: Form(
-            key: formGlobalKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Edit Destination',
-                      style: kHeading,
-                    ),
-                  ),
-                  EditInput(controller: namecontroller),
-                  Container(
-                    height: devW * 0.4,
-                    width: devW * 0.3,
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(blurRadius: 5, offset: Offset(5, 5))
-                        ],
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.black, width: 1),
-                        image: DecorationImage(
-                            image: NetworkImage(networkImage),
-                            fit: BoxFit.fill)),
-                  ),
-                  EditInput(controller: descController),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (formGlobalKey.currentState!.validate()) {
-                          FirebaseFirestore.instance
-                              .collection('destination')
-                              .doc(widget.docId)
-                              .update({
-                            'DestName': namecontroller.text,
-                            'DestImage': imageController.text,
-                            'DestDescription': descController.text,
-                          }).whenComplete(() => Alert(
-                                      context: context,
-                                      title: 'Destination Updated Successfully')
-                                  .show());
-                        }
-                      },
-                      child: Text('Submit'))
-                ],
-              ),
-            )),
+           appBar: AppBar(
+        title: Text("Edit Destination"),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-    )));
+            body: Container(
+              decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+              child: SingleChildScrollView(
+                  child: Center(
+                    child: Form(
+              key: formGlobalKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Edit Destination',
+                        style: kHeading,
+                      ),
+                    ),
+                    EditInput(controller: namecontroller),
+                    Container(
+                      height: devW * 0.4,
+                      width: devW * 0.3,
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 5, offset: Offset(5, 5))
+                          ],
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: Colors.black, width: 1),
+                          image: DecorationImage(
+                              image: NetworkImage(networkImage),
+                              fit: BoxFit.fill)),
+                    ),
+                    EditInput(controller: descController),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (formGlobalKey.currentState!.validate()) {
+                            FirebaseFirestore.instance
+                                .collection('destination')
+                                .doc(widget.docId)
+                                .update({
+                              'DestName': namecontroller.text,
+                              'DestImage': imageController.text,
+                              'DestDescription': descController.text,
+                            }).whenComplete(() => Alert(
+                                        context: context,
+                                        title: 'Destination Updated Successfully')
+                                    .show());
+                          }
+                        },
+                        child: Text('Submit'))
+                  ],
+                ),
+              )),
+                  ),
+                ),
+            )));
   }
 }

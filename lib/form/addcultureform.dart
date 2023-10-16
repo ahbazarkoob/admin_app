@@ -1,12 +1,12 @@
-// ignore_for_file: prefer_const_constructors, non_constant_identifier_names
+// ignore_for_file: prefer_const_constructors, non_constant_identifier_names, unused_local_variable, use_key_in_widget_constructors, sized_box_for_whitespace
 
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
 import '../constants.dart';
 import '../widgets/textfield.dart';
 import 'bookform.dart';
@@ -51,104 +51,121 @@ class _CultureFormDataState extends State<CultureFormData> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Form(
-            key: formGlobalKey,
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      'Add culture',
-                      style: kHeading,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(28.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      appBar: AppBar(
+        title: Text("Add culture"),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Form(
+              key: formGlobalKey,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Add culture',
+                        style: kHeading,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(28.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text('Select Category'),
+                            DropdownButton(
+                              focusColor: Colors.blue,
+                              items: category.map((String category) {
+                                return DropdownMenuItem(
+                                  value: category,
+                                  child: Text(
+                                    category,
+                                    style: kNormalTextBold,
+                                  ),
+                                );
+                              }).toList(),
+                              value: selcategory,
+                              onChanged: (String? newvalue) {
+                                setState(() {
+                                  selcategory = newvalue!;
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextInput(
+                          hintText: 'Culture Name',
+                          controller: culturenamecontroller),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('Select Category'),
-                          DropdownButton(
-                            focusColor: Colors.blue,
-                            items: category.map((String category) {
-                              return DropdownMenuItem(
-                                value: category,
-                                child: Text(
-                                  category,
-                                  style: kNormalTextBold,
-                                ),
-                              );
-                            }).toList(),
-                            value: selcategory,
-                            onChanged: (String? newvalue) {
-                              setState(() {
-                                selcategory = newvalue!;
-                              });
-                            },
+                          Text(
+                            'Upload Image',
+                            style: kSubHeading,
                           ),
+                          IconButton(
+                              onPressed: () {
+                                pickimage();
+                                showImage = true;
+                              },
+                              icon: Icon(Icons.camera)),
                         ],
                       ),
-                    ),
-                    TextInput(
-                        hintText: 'Culture Name',
-                        controller: culturenamecontroller),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          'Upload Image',
-                          style: kSubHeading,
-                        ),
-                        IconButton(
-                            onPressed: () {
-                              pickimage();
-                              showImage = true;
-                            },
-                            icon: Icon(Icons.camera)),
-                      ],
-                    ),
-                    !showImage
-                        ? Text('Image not selected')
-                        : Container(
-                            height: 100,
-                            width: 200,
-                            child: Image.file(imageFile!),
-                          ),
-                    TextInput(
-                        hintText: 'Culture Description',
-                        controller: culturedesccontroller),
-                    ElevatedButton(
-                        onPressed: () {
-                          if (formGlobalKey.currentState!.validate()) {
-                            String CultureId = DateTime.now()
-                                .microsecondsSinceEpoch
-                                .toString();
-                            FirebaseFirestore.instance
-                                .collection('culture')
-                                .doc(CultureId)
-                                .set({
-                              'Culture-Id': CultureId,
-                              'CultureName': culturenamecontroller.text,
-                              'CultureCategory': selcategory,
-                              'CultureImage': cultureimageURL,
-                              'CultureDescription': culturedesccontroller.text,
-                            }).whenComplete(() => {
-                                      culturedesccontroller.clear(),
-                                      culturenamecontroller.clear(),
-                                      Alert(
-                                              context: context,
-                                              title:
-                                                  'Culture Added Successfully')
-                                          .show()
-                                    });
-                          }
-                        },
-                        child: Text('Submit'))
-                  ],
+                      !showImage
+                          ? Text('Image not selected')
+                          : Container(
+                              height: 100,
+                              width: 200,
+                              child: Image.file(imageFile!),
+                            ),
+                      TextInput(
+                          hintText: 'Culture Description',
+                          controller: culturedesccontroller),
+                      ElevatedButton(
+                          onPressed: () {
+                            if (formGlobalKey.currentState!.validate()) {
+                              String CultureId = DateTime.now()
+                                  .microsecondsSinceEpoch
+                                  .toString();
+                              FirebaseFirestore.instance
+                                  .collection('culture')
+                                  .doc(CultureId)
+                                  .set({
+                                'Culture-Id': CultureId,
+                                'CultureName': culturenamecontroller.text,
+                                'CultureCategory': selcategory,
+                                'CultureImage': cultureimageURL,
+                                'CultureDescription':
+                                    culturedesccontroller.text,
+                              }).whenComplete(() => {
+                                        culturedesccontroller.clear(),
+                                        culturenamecontroller.clear(),
+                                        Alert(
+                                                context: context,
+                                                title:
+                                                    'Culture Added Successfully')
+                                            .show()
+                                      });
+                            }
+                          },
+                          child: Text('Submit'))
+                    ],
+                  ),
                 ),
               ),
             ),

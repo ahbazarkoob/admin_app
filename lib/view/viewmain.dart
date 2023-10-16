@@ -15,29 +15,47 @@ class MainCategoryPage extends StatefulWidget {
 class _MainCategoryPageState extends State<MainCategoryPage> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('main').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
-          }
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return MainTile(
-                category: data['CategoryName'].toString(),
-                description: data['CategoryDescription'],
-                imagePath: data['CategoryImage'],
-                id: data['CID'],
+    return Scaffold(
+       appBar: AppBar(
+        title: Text("Main Screen"),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                Theme.of(context).scaffoldBackgroundColor,
+              ],
+            ),
+          ),
+        child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('main').snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+      
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
+              return ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  return MainTile(
+                    category: data['CategoryName'].toString(),
+                    description: data['CategoryDescription'],
+                    imagePath: data['CategoryImage'],
+                    id: data['CID'],
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        });
+            }),
+      ),
+    );
   }
 }
 
@@ -72,7 +90,13 @@ class MainTile extends StatelessWidget {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (_) => EditMainPage(id)));
                   },
-                  icon: Icon(Icons.edit))
+                  icon: Icon(Icons.edit)),
+              IconButton(
+                      onPressed: (){
+                        deleteBook(context);
+                      },
+                      icon: Icon(Icons.delete),
+                    ),
             ],
           ),
           subtitle: Column(
@@ -91,6 +115,7 @@ class MainTile extends StatelessWidget {
                     image: DecorationImage(
                         image: NetworkImage(imagePath), fit: BoxFit.fill)),
               ),
+              Text("CategoryImage:$imagePath"),
               Text("CategoryName: $category"),
               Text(
                 "Description: $description",
@@ -102,4 +127,7 @@ class MainTile extends StatelessWidget {
       ),
     );
   }
+  void deleteBook(BuildContext context) async {
+      await FirebaseFirestore.instance.collection('recipe').doc(id).delete();
+}
 }

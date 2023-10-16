@@ -42,60 +42,76 @@ class _EditMainPageState extends State<EditMainPage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: SingleChildScrollView(
-      child: Center(
-        child: Form(
-            key: formGlobalKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Edit Form',
-                      style: kHeading,
-                    ),
-                  ),
-                  EditInput(controller: cidController),
-                  Container(
-                    height: devW * 0.4,
-                    width: devW * 0.3,
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(blurRadius: 5, offset: Offset(5, 5))
-                        ],
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.black, width: 1),
-                        image: DecorationImage(
-                            image: NetworkImage(networkImage),
-                            fit: BoxFit.fill)),
-                  ),
-                  EditInput(controller: categorydesccontroller),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (formGlobalKey.currentState!.validate()) {
-                          FirebaseFirestore.instance
-                              .collection('main')
-                              .doc(widget.docId)
-                              .update({
-                            'CID': cidController.text,
-                            'CategoryName': categoryController.text,
-                            'CategoryImage': networkImage,
-                            'CategoryDescription': categorydesccontroller.text,
-                          }).whenComplete(() => Alert(
-                                      context: context,
-                                      title: 'Category Updated Successfully')
-                                  .show());
-                        }
-                      },
-                      child: Text('Submit'))
-                ],
-              ),
-            )),
+           appBar: AppBar(
+        title: Text("Edit Form"),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-    )));
+            body: Container(
+              decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+              child: SingleChildScrollView(
+                  child: Center(
+                    child: Form(
+              key: formGlobalKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Edit Form',
+                        style: kHeading,
+                      ),
+                    ),
+                    EditInput(controller: cidController),
+                    Container(
+                      height: devW * 0.4,
+                      width: devW * 0.3,
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 5, offset: Offset(5, 5))
+                          ],
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: Colors.black, width: 1),
+                          image: DecorationImage(
+                              image: NetworkImage(networkImage),
+                              fit: BoxFit.fill)),
+                    ),
+                    EditInput(controller: categorydesccontroller),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (formGlobalKey.currentState!.validate()) {
+                            FirebaseFirestore.instance
+                                .collection('main')
+                                .doc(widget.docId)
+                                .update({
+                              'CID': cidController.text,
+                              'CategoryName': categoryController.text,
+                              'CategoryImage': networkImage,
+                              'CategoryDescription': categorydesccontroller.text,
+                            }).whenComplete(() => Alert(
+                                        context: context,
+                                        title: 'Category Updated Successfully')
+                                    .show());
+                          }
+                        },
+                        child: Text('Submit'))
+                  ],
+                ),
+              )),
+                  ),
+                ),
+            )));
   }
 }

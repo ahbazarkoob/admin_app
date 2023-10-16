@@ -46,111 +46,129 @@ class _HandicraftFormDataState extends State<HandicraftFormData> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            decoration: BoxDecoration(),
-            child: Form(
-              key: formGlobalKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text(
-                    'Add New Craft',
-                    style: kHeading,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        'Select Category',
-                        style: kSubHeading,
-                      ),
-                      DropdownButton(
-                        focusColor: Colors.blue,
-                        items: category.map((String category) {
-                          return DropdownMenuItem(
-                            value: category,
-                            child: Text(
-                              category,
-                              style: kNormalTextBold,
-                            ),
-                          );
-                        }).toList(),
-                        value: selcategory,
-                        onChanged: (String? newvalue) {
-                          setState(() {
-                            selcategory = newvalue!;
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Text(
-                        'Upload Image',
-                        style: kSubHeading,
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            pickimage();
-                            showImage = true;
-                          },
-                          icon: Icon(Icons.camera)),
-                    ],
-                  ),
-                  !showImage
-                      ? Text('Image not selected')
-                      : SizedBox(
-                          height: 100,
-                          width: 200,
-                          child: Image.file(imageFile!),
+      appBar: AppBar(
+        title: Text("Add New Craft"),
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Container(
+              decoration: BoxDecoration(),
+              child: Form(
+                key: formGlobalKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      'Add New Craft',
+                      style: kHeading,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'Select Category',
+                          style: kSubHeading,
                         ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                        validator: ValidationBuilder().url().build(),
-                        controller: urlController,
-                        decoration: InputDecoration(
-                            hintText: 'Enter book url',
-                            hintStyle: TextStyle(fontSize: 20),
-                            enabledBorder: kBorder,
-                            focusedBorder: kBorder)),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (imageURL == null) {
-                          Alert(context: context, title: "Plese upload image");
-                        } else if (formGlobalKey.currentState!.validate()) {
-                          String hId =
-                              DateTime.now().microsecondsSinceEpoch.toString();
-                          FirebaseFirestore.instance
-                              .collection('handicraft')
-                              .doc(hId)
-                              .set({
-                            'HID': hId,
-                            'CraftImage': imageURL,
-                            'CraftURL': urlController.text,
-                            'Category': selcategory,
-                          }).whenComplete(() => {
-                                    urlController.clear(),
-                                    setState(() {
-                                      showImage = false;
-                                    }),
-                                    selcategory = 'Paper-Mache',
-                                    Alert(
-                                            context: context,
-                                            title:
-                                                'Handicraft Added Successfully')
-                                        .show()
-                                  });
-                        }
-                      },
-                      child: Text('Submit'))
-                ],
+                        DropdownButton(
+                          focusColor: Colors.blue,
+                          items: category.map((String category) {
+                            return DropdownMenuItem(
+                              value: category,
+                              child: Text(
+                                category,
+                                style: kNormalTextBold,
+                              ),
+                            );
+                          }).toList(),
+                          value: selcategory,
+                          onChanged: (String? newvalue) {
+                            setState(() {
+                              selcategory = newvalue!;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          'Upload Image',
+                          style: kSubHeading,
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              pickimage();
+                              showImage = true;
+                            },
+                            icon: Icon(Icons.camera)),
+                      ],
+                    ),
+                    !showImage
+                        ? Text('Image not selected')
+                        : SizedBox(
+                            height: 100,
+                            width: 200,
+                            child: Image.file(imageFile!),
+                          ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          validator: ValidationBuilder().url().build(),
+                          controller: urlController,
+                          decoration: InputDecoration(
+                              hintText: 'Enter book url',
+                              hintStyle: TextStyle(fontSize: 20),
+                              enabledBorder: kBorder,
+                              focusedBorder: kBorder)),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (imageURL == null) {
+                            Alert(
+                                context: context, title: "Plese upload image");
+                          } else if (formGlobalKey.currentState!.validate()) {
+                            String hId = DateTime.now()
+                                .microsecondsSinceEpoch
+                                .toString();
+                            FirebaseFirestore.instance
+                                .collection('handicraft')
+                                .doc(hId)
+                                .set({
+                              'HID': hId,
+                              'CraftImage': imageURL,
+                              'CraftURL': urlController.text,
+                              'Category': selcategory,
+                            }).whenComplete(() => {
+                                      urlController.clear(),
+                                      setState(() {
+                                        showImage = false;
+                                      }),
+                                      selcategory = 'Paper-Mache',
+                                      Alert(
+                                              context: context,
+                                              title:
+                                                  'Handicraft Added Successfully')
+                                          .show()
+                                    });
+                          }
+                        },
+                        child: Text('Submit'))
+                  ],
+                ),
               ),
             ),
           ),

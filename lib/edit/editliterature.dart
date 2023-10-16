@@ -56,89 +56,105 @@ class _EditLiteraturePageState extends State<EditLiteraturePage> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-            body: SingleChildScrollView(
-      child: Center(
-        child: Form(
-            key: formGlobalKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Edit Form',
-                      style: kHeading,
-                    ),
-                  ),
-                  EditInput(controller: nameController),
-                  EditInput(controller: authorController),
-                  EditInput(controller: bidController),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                        validator: ValidationBuilder().url().build(),
-                        controller: imageController,
-                        decoration: InputDecoration(
-                            enabledBorder: kBorder, focusedBorder: kBorder)),
-                  ),
-                  EditInput(controller: categoryController),
-                  EditInput(controller: descController),
-                  EditInput(controller: genreController),
-                  EditInput(controller: langController),
-                  EditInput(controller: lengthController),
-                  Container(
-                    height: devW * 0.4,
-                    width: devW * 0.3,
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(blurRadius: 5, offset: Offset(5, 5))
-                        ],
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: Colors.black, width: 1),
-                        image: DecorationImage(
-                            image: NetworkImage(networkImage),
-                            fit: BoxFit.fill)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextFormField(
-                        validator: ValidationBuilder().url().build(),
-                        controller: urlController,
-                        decoration: InputDecoration(
-                            enabledBorder: kBorder, focusedBorder: kBorder)),
-                  ),
-                  ElevatedButton(
-                      onPressed: () {
-                        if (formGlobalKey.currentState!.validate()) {
-                          FirebaseFirestore.instance
-                              .collection('books')
-                              .doc(widget.docId)
-                              .update({
-                            'BID': bidController.text,
-                            'Category': categoryController.text,
-                            'Bookname': nameController.text,
-                            'Bookimage': imageController.text,
-                            'Author': authorController.text,
-                            'Genre': genreController.text,
-                            'Length': lengthController.text,
-                            'Language': langController.text,
-                            'Description': descController.text,
-                            'Link': urlController.text
-                          }).whenComplete(() => Alert(
-                                      context: context,
-                                      title: 'Book Updated Successfully')
-                                  .show());
-                        }
-                      },
-                      child: Text('Submit'))
-                ],
-              ),
-            )),
+          appBar: AppBar(
+        title: Text("Edit Book"),
+        backgroundColor: Theme.of(context).primaryColor,
       ),
-    )));
+            body: Container(
+              decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Colors.white,
+              Theme.of(context).scaffoldBackgroundColor,
+            ],
+          ),
+        ),
+              child: SingleChildScrollView(
+                  child: Center(
+                    child: Form(
+              key: formGlobalKey,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Edit Form',
+                        style: kHeading,
+                      ),
+                    ),
+                    EditInput(controller: nameController),
+                    EditInput(controller: authorController),
+                    EditInput(controller: bidController),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          validator: ValidationBuilder().url().build(),
+                          controller: imageController,
+                          decoration: InputDecoration(
+                              enabledBorder: kBorder, focusedBorder: kBorder)),
+                    ),
+                    EditInput(controller: categoryController),
+                    EditInput(controller: descController),
+                    EditInput(controller: genreController),
+                    EditInput(controller: langController),
+                    EditInput(controller: lengthController),
+                    Container(
+                      height: devW * 0.4,
+                      width: devW * 0.3,
+                      margin: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          boxShadow: const [
+                            BoxShadow(blurRadius: 5, offset: Offset(5, 5))
+                          ],
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: Colors.black, width: 1),
+                          image: DecorationImage(
+                              image: NetworkImage(networkImage),
+                              fit: BoxFit.fill)),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                          validator: ValidationBuilder().url().build(),
+                          controller: urlController,
+                          decoration: InputDecoration(
+                              enabledBorder: kBorder, focusedBorder: kBorder)),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          if (formGlobalKey.currentState!.validate()) {
+                            FirebaseFirestore.instance
+                                .collection('books')
+                                .doc(widget.docId)
+                                .update({
+                              'BID': bidController.text,
+                              'Category': categoryController.text,
+                              'Bookname': nameController.text,
+                              'Bookimage': imageController.text,
+                              'Author': authorController.text,
+                              'Genre': genreController.text,
+                              'Length': lengthController.text,
+                              'Language': langController.text,
+                              'Description': descController.text,
+                              'Link': urlController.text
+                            }).whenComplete(() => Alert(
+                                        context: context,
+                                        title: 'Book Updated Successfully')
+                                    .show());
+                          }
+                        },
+                        child: Text('Submit'))
+                  ],
+                ),
+              )),
+                  ),
+                ),
+            )));
   }
 }
 

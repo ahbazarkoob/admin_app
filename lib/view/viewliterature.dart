@@ -13,35 +13,53 @@ class ViewLiteraturePage extends StatefulWidget {
 class _ViewLiteraturePageState extends State<ViewLiteraturePage> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('books').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return MyListTile(
-                bookName: data['Bookname'],
-                author: data['Author'],
-                id: data['BID'],
-                image: data['Bookimage'],
-                category: data['Category'],
-                description: data['Description'],
-                genre: data['Genre'],
-                language: data['Language'],
-                length: data['Length'],
-                url: data['Link'],
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Literature"), 
+        backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                Theme.of(context).scaffoldBackgroundColor,
+              ],
+            ),
+          ),
+        child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance.collection('books').snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return const Text('Something went wrong');
+              }
+      
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text("Loading");
+              }
+              return ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  return MyListTile(
+                    bookName: data['Bookname'],
+                    author: data['Author'],
+                    id: data['BID'],
+                    image: data['Bookimage'],
+                    category: data['Category'],
+                    description: data['Description'],
+                    genre: data['Genre'],
+                    language: data['Language'],
+                    length: data['Length'],
+                    url: data['Link'],
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        });
+            }),
+      ),
+    );
   }
 }
 
@@ -68,7 +86,7 @@ class MyListTile extends StatelessWidget {
       required this.image,
       required this.language,
       required this.length,
-      required this.url});
+      required this.url,});
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +110,13 @@ class MyListTile extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (_) => EditLiteraturePage(id)));
                   },
-                  icon: const Icon(Icons.edit))
+                  icon: const Icon(Icons.edit)),
+              IconButton(
+                      onPressed: (){
+                        deleteBook(context);
+                      },
+                      icon: Icon(Icons.delete),
+                    ),
             ],
           ),
           subtitle: Column(
@@ -104,20 +128,23 @@ class MyListTile extends StatelessWidget {
               Text("Length: $length"),
               Text("Id: $id"),
               Text("Name: $bookName"),
-              Text("Image: $url"),
-              Container(
-                height: devW * 0.4,
-                width: devW * 0.3,
-                margin: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(blurRadius: 5, offset: Offset(5, 5))
-                    ],
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: Colors.black, width: 1),
-                    image: DecorationImage(
-                        image: NetworkImage(image), fit: BoxFit.fill)),
+              Text("Image: $image"),
+              Center(
+                child: Container(
+                  height: devH * 0.2,
+                  width: devW * 0.4,
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(blurRadius: 5, offset: Offset(5, 5))
+                      ],
+                      borderRadius: BorderRadius.circular(5),
+                      border: Border.all(color: Colors.black, width: 1),
+                      image: DecorationImage(
+                          image: NetworkImage(image), fit: BoxFit.fill)),
+                ),
               ),
+              Text("Link:$url"),
               Text(
                 "Description: $description",
                 textAlign: TextAlign.justify,
@@ -128,5 +155,8 @@ class MyListTile extends StatelessWidget {
         ),
       ),
     );
+  }
+   void deleteBook(BuildContext context) async {
+      await FirebaseFirestore.instance.collection('books').doc(id).delete();
   }
 }

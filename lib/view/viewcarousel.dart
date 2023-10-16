@@ -16,37 +16,61 @@ class ViewHandicraftCarousel extends StatefulWidget {
 class _ViewHandicraftCarouselState extends State<ViewHandicraftCarousel> {
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-        stream:
-            FirebaseFirestore.instance.collection('craftcarousel').snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
-
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
-          }
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return HandicraftCarousel(
-                id: data['CAID'],
-                title: data['Title'],
-                titledesc: data['TitleDesc'],
-                imagePath: downloadUrls,
-                history: data['History'],
-                process: data['Process'],
-                stepone: data['StepOne'],
-                steptwo: data['StepTwo'],
-                stepthree: data['StepThree'],
-                stepfour: data['StepFour'],
-                stepfive: data['StepFive'],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Carousel"), 
+      backgroundColor: Theme.of(context).primaryColor,
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.white,
+                Theme.of(context).scaffoldBackgroundColor,
+              ],
+            ),
+          ),
+        child: StreamBuilder<QuerySnapshot>(
+            stream:
+                FirebaseFirestore.instance.collection('craftcarousel').snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasError) {
+                return Text('Something went wrong');
+              }
+          
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Text("Loading");
+              }
+              return ListView(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  return HandicraftCarousel(
+                    id: data['CAID'],
+                    title: data['Title'],
+                    titledesc: data['TitleDesc'],
+                    imagePath: [
+                      data['TitleImage'].toString(),
+                      data['StepOneImage'].toString(),
+                      data['StepTwoImage'].toString(),
+                      data['StepThreeImage'].toString(),
+                      data['StepFourImage'].toString()
+                    ],
+                    history: data['History'],
+                    process: data['Process'],
+                    stepone: data['StepOne'],
+                    steptwo: data['StepTwo'],
+                    stepthree: data['StepThree'],
+                    stepfour: data['StepFour'],
+                    stepfive: data['StepFive'],
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
-        });
+            }),
+      ),
+    );
   }
 }
 
@@ -79,6 +103,7 @@ class HandicraftCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(imagePath[0]);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
